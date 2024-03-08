@@ -4,6 +4,7 @@ import time
 import pmmoto
 import warnings
 import matplotlib.pyplot as plt
+from datetime import datetime
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 
 import cProfile
@@ -34,7 +35,7 @@ def my_function():
     size = comm.Get_size()
     rank = comm.Get_rank()
 
-    subdomains = [1,1,1] # Specifies how Domain is broken among procs
+    subdomains = [2,2,2] # Specifies how Domain is broken among procs
     nodes = [200,200,200] # Total Number of Nodes in Domain, controls resolution
   
     ## Ordering for Inlet/Outlet ( (-x,+x) , (-y,+y) , (-z,+z) )
@@ -43,9 +44,12 @@ def my_function():
     outlet = [[0,0],[0,0],[0,0]]
     
     i = 8
-    verlet_max = 33
+    verlet_max = 10
     x_array = []
     y_array = []
+
+    out_filename = f"verlet_{datetime.now().strftime('%Y%m%d_%H%M%S')}" + ".csv"
+    out_file = open(out_filename,'w',encoding='utf-8')
 
     ###Iterate through verlet sphere sizes (i) and compare run-times (parabolic shape)
     for i in range(i,verlet_max):
@@ -69,17 +73,24 @@ def my_function():
       elapsed_time = end_time - start_time
       x_array.append(i)
       y_array.append(elapsed_time)
-      print("elapsed time: ", end_time - start_time)
 
-      pmmoto.io.save_grid_data("dataOut/test_lammps_read_grid_trim",sd,pm.grid)
-    print(x_array)
-    print(y_array)
-    plt.plot(x_array, y_array)
-    plt.title("CPU Time vs. Verlet Sphere Count")
-    plt.xlabel("Verlet Spheres ($\sqrt[3]{x}$)")
-    plt.ylabel("Time Elapsed (seconds)")
-    file = "verlet_vs_time_2.png"
-    plt.savefig(file)
+
+      save_grid = False
+      if save_grid:
+        pmmoto.io.save_grid_data("dataOut/test_lammps_read_grid_trim",sd,pm.grid)
+
+      if rank == 0:
+         out_file.write(f'{i}\t{elapsed_time}\n') 
+
+
+    # print(x_array)
+    # print(y_array)
+    # plt.plot(x_array, y_array)
+    # plt.title("CPU Time vs. Verlet Sphere Count")
+    # plt.xlabel("Verlet Spheres ($\sqrt[3]{x}$)")
+    # plt.ylabel("Time Elapsed (seconds)")
+    # file = "verlet_vs_time_2.png"
+    # plt.savefig(file)
 
 
 if __name__ == "__main__":
