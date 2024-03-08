@@ -4,6 +4,7 @@ import time
 import pmmoto
 import warnings
 import matplotlib.pyplot as plt
+from datetime import datetime
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 
 import cProfile
@@ -40,12 +41,15 @@ def my_function():
     ###increase number of nodes vs. MF values 
 
     n = 100
-    nMax = 501
+    nMax = 201
     # xArray = []
     
     boundaries = [[2,2],[2,2],[0,0]] # 0: Nothing Assumed  1: Walls 2: Periodic
     inlet  = [[0,0],[0,0],[0,0]]
     outlet = [[0,0],[0,0],[0,0]]
+
+    out_filename = f"grid_independence_{datetime.now().strftime('%Y%m%d_%H%M%S')}" + ".csv"
+    out_file = open(out_filename,'w',encoding='utf-8')
 
     for n in range(n,nMax, 100):
         nodes = [n,n,n] # Total Number of Nodes in Domain, controls resolution
@@ -72,7 +76,7 @@ def my_function():
         mink = pmmoto.analysis.minkowski.functionals(sd,pm.grid)
 
         if rank == 0:
-            print(mink)
+            out_file.write(f'{n}\t{mink}\n') 
 
         # if rank == 0:
         #     end_time = time.time()
