@@ -9,7 +9,7 @@ import re
 
 ###Want to read in CSV data in a 2x2 shaped array
 
-filename = 'grid_independence_1500.csv'
+filename = 'grid_independence_3000.csv'
 
 # Define a regular expression pattern to extract numeric values including the identifier
 pattern = re.compile(r'(\d+)\s+\(([\d.,\s]+)\)')
@@ -49,28 +49,28 @@ plt.style.use('seaborn-v0_8-whitegrid')
 plt.subplot(2,2,1)
 plt.plot(nodes, mink0, color ='mediumorchid')
 plt.grid(True, linestyle='--', alpha=0.5)
-plt.xlim(0, 1500)
+plt.xlim(0, 3000)
 plt.title('Nodes vs. Minkowski Functional 0')
 
 ###Subplot 2 TOP RIGHT
 plt.subplot(2,2,2)
 plt.plot(nodes, mink1, color ='lightseagreen')
 plt.grid(True, linestyle='--', alpha=0.5)
-plt.xlim(0, 1500)
+plt.xlim(0, 3000)
 plt.title('Nodes vs. Minkowski Functional 1')
 
 ###Subplot 3 BOTTOM LEFT
 plt.subplot(2,2,3)
 plt.plot(nodes, mink2, color ='dodgerblue')
 plt.grid(True, linestyle='--', alpha=0.5)
-plt.xlim(0, 1500)
+plt.xlim(0, 3000)
 plt.title('Nodes vs. Minkowski Functional 2')
 
 ###Subplot 4 BOTTOM RIGHT
 plt.subplot(2,2,4)
 plt.plot(nodes, mink3, color ='mediumslateblue')
 plt.grid(True, linestyle='--', alpha=0.5)
-plt.xlim(0, 1500)
+plt.xlim(0, 3000)
 plt.title('Nodes vs. Minkowski Functional 3')
 
 ###Save figure and prevent clipping

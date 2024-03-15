@@ -38,7 +38,7 @@ def my_function(n_proc):
     comm = MPI.COMM_WORLD
     size = comm.Get_size()
     rank = comm.Get_rank()
-    print(rank,n_proc)
+    # print(rank,n_proc)
     subdomains = [n_proc,n_proc,n_proc] # Specifies how Domain is broken among procs
     ###increase number of nodes vs. MF values 
 
@@ -86,6 +86,6 @@ def my_function(n_proc):
         pmmoto.io.save_grid_data("dataOut/test_lammps_read_grid_trim",sd,pm.grid)
 
 if __name__ == "__main__":
-    print(sys.argv)
+    # print(sys.argv)
     my_function(int(sys.argv[1]))
     MPI.Finalize()
