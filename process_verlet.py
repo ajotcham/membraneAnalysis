@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 16})
 
 file_in = "final_results/verlet_independence_4.csv"
 
@@ -7,7 +8,7 @@ data = np.loadtxt(file_in)
 num_entries = len(data)
 nodes_per_verlet = np.zeros(num_entries)
 verlets = np.zeros(num_entries)
-proc = 4**3
+proc = 4**3 ###Must change first integer to match the cube root of the amount of processes being ran
 
 ###Want to calculate nodes per verlet
 for n_row,row in enumerate(data): ###Loops through rows
@@ -55,8 +56,8 @@ flag_plot = True
 if flag_plot:
     #Initialize Plot 1
     plt.figure(figsize=(8,6))
-    plt.title(f'Nodes in Each Verlet Domain vs. Time Elapsed ({proc} Processors)')
-    plt.xlabel('Total Nodes in Each Verlet Domain ($n^3$)')
+    #plt.title(f'Nodes in Each Verlet Domain vs. Time Elapsed ({proc} Processors)')
+    plt.xlabel('Nodes in Verlet Domain ($n^3$)')
     plt.ylabel('Time Elapsed (seconds)')
     plt.grid(True,linestyle='--',alpha=0.75)
 
@@ -75,14 +76,14 @@ if flag_plot:
     plt.xlim(0,80) ###Limited so we can see the minimum points for each line
     plt.ylim(0,60)
     plt.plot(nodes_min,minimum_times,'o',color='royalblue',alpha=1.0,label='minimum points')
-    plt.legend()
+    plt.legend(prop={'size':12},facecolor='white',framealpha=1)
     #plt.show()
     plt.savefig(f'plots/nodes_per_verlet_elapsedtime_{proc}')
 
 
     #Initialize Plot 2
     plt.figure(figsize=(8,6))
-    plt.title(f'Nodes in Each Verlet Domain vs. Time Elapsed ({proc} Processors)')
+    #plt.title(f'Nodes in Each Verlet Domain vs. Time Elapsed ({proc} Processors)')
     plt.xlabel('Total Verlet Domains ($v^3$)')
     plt.ylabel('Time Elapsed (seconds)')
     plt.grid(True,linestyle='--',alpha=0.75)
@@ -101,7 +102,7 @@ if flag_plot:
         x = x+1
     #highlight minimum points
     plt.plot(verlet_min,minimum_times,'o',color='royalblue',label='minimum points',alpha=1.0)
-    plt.legend()
+    plt.legend(prop={'size':12},facecolor='white',framealpha=1)
     plt.xlim(0,25) ###Limited so we can see the minimum points for each line
     if proc == 3**3:
         plt.ylim(0,10**3)

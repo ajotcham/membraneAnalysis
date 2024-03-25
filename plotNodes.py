@@ -8,6 +8,7 @@ import glob
 import csv
 import re
 from numpy import prod
+plt.rcParams.update({'font.size': 16})
 ###Want to read in CSV data in a 2x2 shaped array
 
 filename = 'final_results/grid_independence_data_final.csv'
@@ -43,7 +44,7 @@ with open(filename, 'r') as file:
 
 ###Now we have a nodes list from n = n to n = nMax with steps of 100 and lists of each MF corresponding to node size
         
-flag_plotMF = True
+flag_plotMF = False
 if flag_plotMF:
     ###Plot nodes vs each MF, we need every MF to reach a rate of 0 in change per node count
     plt.style.use('seaborn-v0_8-whitegrid')
@@ -54,9 +55,9 @@ if flag_plotMF:
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.xlim(100, 3000)
     plt.ylim(0,2.0e6)
-    plt.xlabel('Total Node Amount ($n^{1/3}$)')
-    plt.ylabel('MF0, Volume ($l^3$)')
-    plt.title('Nodes vs. Minkowski Functional 0')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_0$ ($L^3$)')
+    #plt.title('Nodes vs. Minkowski Functional 0')
 
     ###Subplot 2 TOP RIGHT
     plt.subplot(2,2,2)
@@ -64,31 +65,33 @@ if flag_plotMF:
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.xlim(100, 3000)
     plt.ylim(bottom=0)
-    plt.xlabel('Total Node Amount ($n^{1/3}$)')
-    plt.ylabel('MF1, Surface Area ($l^2$)')
-    plt.title('Nodes vs. Minkowski Functional 1')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_1$ ($L^2$)')
+    #plt.title('Nodes vs. Minkowski Functional 1')
 
     ###Subplot 3 BOTTOM LEFT
     plt.subplot(2,2,3)
+    plt.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
     plt.plot(nodes, mink2, color ='dodgerblue')
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.xlim(100, 3000)
     plt.ylim(bottom=0)
-    plt.xlabel('Total Node Amount ($n^{1/3}$)')
-    plt.ylabel('MF2, Integral Mean Curvature ($l$)')
-    plt.title('Nodes vs. Minkowski Functional 2')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_2$ ($L$)')
+    #plt.title('Nodes vs. Minkowski Functional 2')
 
     ###Subplot 4 BOTTOM RIGHT
     plt.subplot(2,2,4)
+    plt.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
     plt.plot(nodes, mink3, color ='mediumslateblue')
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.xlim(100, 3000)
-    plt.xlabel('Total Node Amount ($n^{1/3}$)')
-    plt.ylabel('MF3, Euler Characteristic')
-    plt.title('Nodes vs. Minkowski Functional 3')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_3$ (-)')
+    #plt.title('Nodes vs. Minkowski Functional 3')
 
     ###Save figure and prevent clipping
-    plt.tight_layout()  
+    plt.tight_layout()
     plt.savefig('plots/nodes_vs_mink.png')
 
 ###We want to plot relative change (derivative) of the vs. the node amount
@@ -111,7 +114,7 @@ for i in range(list_lengths):
     value = dif[i]/mink0[i]
     dm0.append(value)
     i = i+1
-dmink0 = [prod(x) for x in dm0]
+dmink0 = [abs(prod(x)*100) for x in dm0]
 #relative change in m1
 i = 0
 dm1 = []
@@ -120,7 +123,7 @@ for i in range(list_lengths):
     value = dif[i]/mink0[i]
     dm1.append(value)
     i = i+1
-dmink1 = [prod(x) for x in dm1]
+dmink1 = [abs(prod(x)*100) for x in dm1]
 #relative change in m2
 i = 0
 dm2 = []
@@ -129,7 +132,7 @@ for i in range(list_lengths):
     value = dif[i]/mink0[i]
     dm2.append(value)
     i = i+1
-dmink2 = [prod(x) for x in dm2]
+dmink2 = [abs(prod(x)*100) for x in dm2]
 #relative change in m3
 i = 0
 dm3 = []
@@ -138,8 +141,7 @@ for i in range(list_lengths):
     value = dif[i]/mink0[i]
     dm3.append(value)
     i = i+1
-dmink3 = [prod(x) for x in dm3]
-
+dmink3 = [abs(prod(x)*100) for x in dm3]
 
 flag_plot_relative = True
 if flag_plot_relative:
@@ -147,36 +149,39 @@ if flag_plot_relative:
     plt.figure(figsize=(10,6)) #size is in inches
     #Relative Change Subplot 1 Top Left
     plt.subplot(2,2,1)
-    plt.title('Relative Change in 0th Minkowski Functional')
-    plt.plot(nodes_approx, dmink0, color='mediumorchid')
+    #plt.title('Relative Change in 0th Minkowski Functional')
+    plt.semilogy(nodes_approx, dmink0, color='mediumorchid')
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.xlabel('Total Nodes ($n^{1/3}$)')
-    plt.ylabel('Relative Change')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_0$ Percent Change')
 
 
     #Relative Change Subplot 2 Top Right
     plt.subplot(2,2,2)
-    plt.title('Relative Change in 1st Minkowski Functional')
-    plt.plot(nodes_approx, dmink1, color='lightseagreen')
+    #plt.title('Relative Change in 1st Minkowski Functional')
+    plt.semilogy(nodes_approx, dmink1, color='lightseagreen')
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.xlabel('Total Nodes ($n^{1/3}$)')
-    plt.ylabel('Relative Change')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_1$ Percent Change')
 
     #Relative Change Subplot 3 Bottom Left
     plt.subplot(2,2,3)
-    plt.title('Relative Change in 2nd Minkowski Functional')
-    plt.plot(nodes_approx, dmink2, color='dodgerblue')
+    plt.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+    #plt.title('Relative Change in 2nd Minkowski Functional')
+    plt.semilogy(nodes_approx, dmink2, color='dodgerblue')
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.xlabel('Total Nodes ($n^{1/3}$)')
-    plt.ylabel('Relative Change')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_2$ Percent Change')
 
     #Relative Change Subplot 4 Bottom Right
     plt.subplot(2,2,4)
-    plt.title('Relative Change in 3rd Minkowski Functional')
-    plt.plot(nodes_approx, dmink3, color='mediumslateblue')
+    plt.ticklabel_format(axis='y', style='sci', scilimits=(0,0))
+    #plt.title('Relative Change in 3rd Minkowski Functional')
+    plt.semilogy(nodes_approx, dmink3, color='mediumslateblue')
     plt.grid(True, linestyle='--', alpha=0.5)
-    plt.xlabel('Total Nodes ($n^{1/3}$)')
-    plt.ylabel('Relative Change')
+    plt.xlabel('Nodes ($n^{1/3}$)')
+    plt.ylabel('MF$_3$ Percent Change')
+    plt.ylim(0,1)
 
     plt.tight_layout()
     plt.savefig('plots/plotMF_relative.png')
