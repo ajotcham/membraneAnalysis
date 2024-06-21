@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="inta30"
+#SBATCH --output="inta30.%j.out"
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=172G
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u intersect_add.py 30

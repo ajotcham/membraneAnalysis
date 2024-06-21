@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="init_all03"
+#SBATCH --output="init_all_03.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+
+module load 
+python -u averaging_plus_mem_init.py 03_90 perm_v2

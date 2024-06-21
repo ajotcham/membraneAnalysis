@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="rtna_d5"
+#SBATCH --output="rtna_d5.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=128
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+
+python -u rt_msd_dist_loop.py nacl03_90 perm 50 5
+

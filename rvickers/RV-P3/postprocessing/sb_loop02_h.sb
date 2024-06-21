@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="loop_02h"
+#SBATCH --output="loop_02h.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+
+module load 
+python -u averaging_loop.py 02_98_v3 hydr

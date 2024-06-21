@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="traj20"
+#SBATCH --output="traj20.%j.out"
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=172G
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 10:00:00
+source ~/.bashrc
+python -u traj_u.py 20

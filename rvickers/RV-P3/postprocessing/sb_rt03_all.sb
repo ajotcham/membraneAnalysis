@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="rt03_all"
+#SBATCH --output="rt03_all.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u rt_msd_theta_loop.py 03_90 perm_v2 150
+python -u rt_msd_v_loop.py 03_90 perm_v2 150
+python -u rt_msd_dist_loop.py 03_90 perm_v2 150

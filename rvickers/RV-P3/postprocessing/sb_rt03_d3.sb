@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="rt_d3"
+#SBATCH --output="rt_d3.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=128
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+
+python -u rt_msd_dist_loop.py 03_90 perm_v2 125 3
+

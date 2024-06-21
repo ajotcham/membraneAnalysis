@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="t_samp"
+#SBATCH --output="t_samp.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=128
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+
+python -u get_trajectories_nacl.py nacl03_90 perm
+

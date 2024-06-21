@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="rt10"
+#SBATCH --output="rt10.%j.out"
+#SBATCH --partition=compute
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u rt_msd_hist.py 10 35

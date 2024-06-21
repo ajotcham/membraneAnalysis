@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="msd03_3"
+#SBATCH --output="msd03_3_%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+
+source ~/.bashrc
+python -u msd_plot_z_u_single_permed.py 03_90 perm_v2 3 125

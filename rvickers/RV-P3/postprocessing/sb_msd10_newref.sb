@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="msd10_nr"
+#SBATCH --output="msd10_nr.%j.out"
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=172G
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u msd_v_theta_newref.py 10

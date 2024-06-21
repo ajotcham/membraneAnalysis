@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="max10"
+#SBATCH --output="max10.%j.out"
+#SBATCH --partition=compute
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u get_test_mols.py

@@ -1,0 +1,290 @@
+LAMMPS (7 Feb 2024 - Development - patch_7Feb2024_update1-147-g4d89741d8c)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+package omp 2
+set 2 OpenMP thread(s) per MPI task
+using multi-threaded neighbor list subroutines
+# General
+units            real
+atom_style       full
+dimension        3
+newton           off
+boundary         p p p
+
+# Styles
+pair_style       lj/charmm/coul/long 10.0 12.0
+pair_modify      shift no mix arithmetic
+kspace_style     pppm 1.0e-4
+kspace_modify    diff ad
+bond_style       harmonic
+angle_style      harmonic
+dihedral_style   charmm
+improper_style   harmonic
+special_bonds    charmm
+
+read_restart perm_v2/restarts/restart.${startStep}
+read_restart perm_v2/restarts/restart.98075000
+Reading restart file ...
+  restart file = 24 Dec 2020, LAMMPS = 7 Feb 2024
+WARNING: Old restart file format revision. Switching to compatibility mode. (src/read_restart.cpp:581)
+WARNING: Restart file used different # of processors: 512 vs. 256 (src/read_restart.cpp:626)
+  restoring atom style full from restart
+  orthogonal box = (0 0 -287) to (175.76828 175.76828 237)
+  4 by 4 by 16 MPI processor grid
+  restoring pair style lj/charmm/coul/long/omp from restart
+  restoring bond style harmonic/omp from restart
+  restoring angle style harmonic/omp from restart
+  restoring dihedral style charmm/omp from restart
+  restoring improper style harmonic/omp from restart
+  1106744 atoms
+  922000 bonds
+  1003612 angles
+  1270145 dihedrals
+  512926 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     3 = max # of 1-2 neighbors
+     6 = max # of 1-3 neighbors
+    12 = max # of 1-4 neighbors
+    14 = max # of special neighbors
+  special bonds CPU = 0.029 seconds
+  read_restart CPU = 1.595 seconds
+dielectric 1.0
+neighbor 4.0 bin
+neigh_modify delay 0 every 1 check yes one 4000
+timestep 2.0
+run_style verlet
+run 0
+WARNING: No fixes with time integration, atoms won't move (src/verlet.cpp:60)
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.27863807
+  grid = 96 96 288
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.03862808
+  estimated relative force accuracy = 0.00011632731
+  using double precision FFTW3
+  3d grid and FFT values/proc = 24025 18432
+Generated 153 of 153 mixed pair_coeff terms from sixthpower mixing rule
+Unused restart file global fix info:
+  fix style: nvt/omp, fix ID: 1
+Unused restart file peratom fix info:
+  fix style: spring/self, fix ID: tether
+Last active /omp style is kspace_style pppm/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 4000, page size: 100000
+  master list distance cutoff = 13
+  ghost atom cutoff = 13
+  binsize = 6.5, bins = 28 28 81
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/charmm/coul/long/omp, perpetual
+      attributes: half, newton off, omp
+      pair build: half/bin/newtoff/omp
+      stencil: full/bin/3d
+      bin: standard
+WARNING: Inconsistent image flags (src/domain.cpp:814)
+Per MPI rank memory allocation (min/avg/max) = 22.17 | 46.39 | 58.65 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+  98075000   243.27731     -1912884.6      1019832.3     -90482.8        13029.927    
+Loop time of 9.98409e-06 on 512 procs for 0 steps with 1106744 atoms
+
+100.7% CPU use with 256 MPI tasks x 2 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Bond    | 0          | 0          | 0          |   0.0 |  0.00
+Kspace  | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 9.984e-06  |            |       |100.00
+
+Nlocal:        4323.22 ave        6412 max           0 min
+Histogram: 64 0 0 0 0 16 0 2 45 129
+Nghost:        15249.6 ave       22571 max           0 min
+Histogram: 48 16 0 0 0 16 16 0 22 138
+Neighs:    2.50601e+06 ave 3.96224e+06 max           0 min
+Histogram: 64 0 0 0 16 0 2 35 59 80
+
+Total # of neighbors = 6.4153965e+08
+Ave neighs/atom = 579.664
+Ave special neighs/atom = 5.4560296
+Neighbor list builds = 0
+Dangerous builds = 0
+
+variable PISTON_AREA equal  (xhi-xlo)*(yhi-ylo)
+variable FinMD_to_FinN equal 6.94768717535204e-11
+variable ATM_to_nm2 equal 101325
+variable ANG_to_M equal 1e-10
+
+group waterO type 15
+212147 atoms in group waterO
+
+region FEED block INF INF INF INF INF -75
+region GAP block INF INF INF INF -75 75
+region PERM block INF INF INF INF 75 INF
+group FEEDATOMS dynamic WATER region FEED every 1000
+dynamic group FEEDATOMS defined
+group GAPATOMS dynamic WATER region GAP every 1000
+dynamic group GAPATOMS defined
+group PERMATOMS dynamic WATER region PERM every 1000
+dynamic group PERMATOMS defined
+
+compute WaterCoord1 waterO coord/atom cutoff 3 group waterO
+
+fix feedWcoord1 FEEDATOMS ave/histo 100 10 1000 0 20 20 c_WaterCoord1 mode vector ave one file coord/feedW1.txt
+fix membWcoord1 GAPATOMS ave/histo 100 10 1000 0 20 20 c_WaterCoord1 mode vector ave one file coord/membW1.txt
+fix permWcoord1 PERMATOMS ave/histo 100 10 1000 0 20 20 c_WaterCoord1 mode vector ave one file coord/permW1.txt
+
+compute WaterCoord2 waterO coord/atom cutoff 5.5 group waterO
+
+fix feedWcoord2 FEEDATOMS ave/histo 100 10 1000 0 40 40 c_WaterCoord2 mode vector ave one file coord/feedW2.txt
+fix membWcoord2 GAPATOMS ave/histo 100 10 1000 0 40 40 c_WaterCoord2 mode vector ave one file coord/membW2.txt
+fix permWcoord2 PERMATOMS ave/histo 100 10 1000 0 40 40 c_WaterCoord2 mode vector ave one file coord/permW2.txt
+
+
+fix tether PINplane spring/self 427.6
+variable APPL_PRESS_FEED equal ${FEEDP}*${ATM_to_nm2}/count(LOzwall)
+variable APPL_PRESS_FEED equal 200*${ATM_to_nm2}/count(LOzwall)
+variable APPL_PRESS_FEED equal 200*101325/count(LOzwall)
+variable APPL_PRESS_PERM equal 100*${ATM_to_nm2}/count(HIzwall)
+variable APPL_PRESS_PERM equal 100*101325/count(HIzwall)
+
+variable pos_HYDRATE_FORCE equal ${PISTON_AREA}*${ANG_to_M}*${ANG_to_M}*${APPL_PRESS_FEED}/${FinMD_to_FinN}
+variable pos_HYDRATE_FORCE equal 30894.4880116045*${ANG_to_M}*${ANG_to_M}*${APPL_PRESS_FEED}/${FinMD_to_FinN}
+variable pos_HYDRATE_FORCE equal 30894.4880116045*1e-10*${ANG_to_M}*${APPL_PRESS_FEED}/${FinMD_to_FinN}
+variable pos_HYDRATE_FORCE equal 30894.4880116045*1e-10*1e-10*${APPL_PRESS_FEED}/${FinMD_to_FinN}
+variable pos_HYDRATE_FORCE equal 30894.4880116045*1e-10*1e-10*9030.7486631016/${FinMD_to_FinN}
+variable pos_HYDRATE_FORCE equal 30894.4880116045*1e-10*1e-10*9030.7486631016/6.94768717535204e-11
+variable neg_HYDRATE_FORCE equal -${PISTON_AREA}*${ANG_to_M}*${ANG_to_M}*${APPL_PRESS_PERM}/${FinMD_to_FinN}
+variable neg_HYDRATE_FORCE equal -30894.4880116045*${ANG_to_M}*${ANG_to_M}*${APPL_PRESS_PERM}/${FinMD_to_FinN}
+variable neg_HYDRATE_FORCE equal -30894.4880116045*1e-10*${ANG_to_M}*${APPL_PRESS_PERM}/${FinMD_to_FinN}
+variable neg_HYDRATE_FORCE equal -30894.4880116045*1e-10*1e-10*${APPL_PRESS_PERM}/${FinMD_to_FinN}
+variable neg_HYDRATE_FORCE equal -30894.4880116045*1e-10*1e-10*4515.3743315508/${FinMD_to_FinN}
+variable neg_HYDRATE_FORCE equal -30894.4880116045*1e-10*1e-10*4515.3743315508/6.94768717535204e-11
+
+fix FEEDFORCEset LOzwall setforce  0.0 0.0 NULL
+fix PERMFORCEset HIzwall setforce  0.0 0.0 NULL
+
+fix FEEDFORCE LOzwall aveforce  NULL NULL v_pos_HYDRATE_FORCE
+fix PERMFORCE HIzwall aveforce  NULL NULL v_neg_HYDRATE_FORCE
+
+compute        peratomstressvol all stress/atom NULL
+compute        peratomvol all voronoi/atom
+
+
+variable       peratompress         atom (c_peratomstressvol[1]+c_peratomstressvol[2]+c_peratomstressvol[3])
+compute        totalpressure WATER reduce sum c_peratomstressvol[1] c_peratomstressvol[2] c_peratomstressvol[3]
+compute        peratommass all property/atom mass
+compute        totalmass WATER reduce sum c_peratommass
+compute        totalvol WATER reduce sum c_peratomvol[1]
+
+variable actualdensity equal c_totalmass*(1e8)^3/(6.022e23*c_totalvol)
+variable press equal -(c_totalpressure[1]+c_totalpressure[2]+c_totalpressure[3])/(3*c_totalvol)
+#dump waterdata WATER custom/gz 500 rerun${rerunNum}/pressure/pressuredata.*.gz id mol type mass q x y z xu yu zu vx vy vz v_peratompress c_peratomvol[1]
+#dump systemdata all custom/gz 500000 rerun${rerunNum}/system/systemdata.*.gz id mol type mass q x y z vx vy vz v_peratompress c_peratomvol[1]
+dump membranedata SOLID custom/gz 1 rerun${rerunNum}/membrane/membranedata.*.gz id mol type mass q x y z v_peratompress c_peratomvol[1]
+dump membranedata SOLID custom/gz 1 rerun9/membrane/membranedata.*.gz id mol type mass q x y z v_peratompress c_peratomvol[1]
+#dump_modify waterdata sort 2
+#dump_modify systemdata sort 2
+#restart 5000 perm_v2/restarts/restart.*
+
+
+
+thermo 5000
+fix 1 all nvt temp 300 300 200
+
+thermo_style custom step temp press v_press v_actualdensity c_totalvol
+fix FXSHAKE all rattle 0.0001 20 5000 b 17 a 22 t 5
+Finding RATTLE clusters ...
+  112744 = # of size 2 clusters
+  119583 = # of size 3 clusters
+       0 = # of size 4 clusters
+   92564 = # of frozen angles
+  find clusters CPU = 0.011 seconds
+
+run 5000
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.27863807
+  grid = 96 96 288
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.03862808
+  estimated relative force accuracy = 0.00011632731
+  using double precision FFTW3
+  3d grid and FFT values/proc = 24025 18432
+Generated 153 of 153 mixed pair_coeff terms from sixthpower mixing rule
+Last active /omp style is kspace_style pppm/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 4000, page size: 100000
+  master list distance cutoff = 13
+  ghost atom cutoff = 13
+  binsize = 6.5, bins = 28 28 81
+  3 neighbor lists, perpetual/occasional/extra = 1 2 0
+  (1) pair lj/charmm/coul/long/omp, perpetual
+      attributes: half, newton off, omp
+      pair build: half/bin/newtoff/omp
+      stencil: full/bin/3d
+      bin: standard
+  (2) compute coord/atom, occasional
+      attributes: full, newton off, omp
+      pair build: full/bin/omp
+      stencil: full/bin/3d
+      bin: standard
+  (3) compute coord/atom, occasional
+      attributes: full, newton off, omp
+      pair build: full/bin/omp
+      stencil: full/bin/3d
+      bin: standard
+WARNING: Inconsistent image flags (src/domain.cpp:814)
+RATTLE stats (type/ave/delta/count) on step 98075000
+Bond:    2   1.086     4.98155e-08   112744
+Bond:   17   1.0118    2.41688e-06   424294
+Angle:  22   108.15    0.000311457    92564
+Per MPI rank memory allocation (min/avg/max) = 34.72 | 66.75 | 82.45 Mbytes
+   Step          Temp          Press         v_press     v_actualdensity   c_totalvol  
+  98075000   300.20377      25.360262     -254.00465      0.97994135     6476709.7    
+RATTLE stats (type/ave/delta/count) on step 98080000
+Bond:    2   1.086     3.79436e-08   112744
+Bond:   17   1.0118    2.70079e-06   424294
+Angle:  22   108.15    0.000383007    92564
+  98080000   300.04534     -29.226462     -302.93875      0.97961803     6478847.4    
+Loop time of 18193.8 on 512 procs for 5000 steps with 1106744 atoms
+
+Performance: 0.047 ns/day, 505.384 hours/ns, 0.275 timesteps/s, 304.154 katom-step/s
+99.6% CPU use with 256 MPI tasks x 2 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.14136    | 224        | 354.53     | 908.8 |  1.23
+Bond    | 0.50035    | 14.495     | 29.15      | 275.9 |  0.08
+Kspace  | 136.57     | 262.27     | 480.07     | 812.4 |  1.44
+Neigh   | 37.094     | 37.369     | 38.148     |   5.6 |  0.21
+Comm    | 0.29146    | 5.1782     | 7.7723     | 111.0 |  0.03
+Output  | 2886.1     | 10240      | 17617      |4237.9 | 56.28
+Modify  | 42.361     | 48.244     | 60.554     |  84.2 |  0.27
+Other   |            | 7362       |            |       | 40.46
+
+Nlocal:        4323.22 ave        6399 max           0 min
+Histogram: 64 0 0 0 0 16 0 1 43 132
+Nghost:        15242.5 ave       22530 max           0 min
+Histogram: 48 16 0 0 0 16 16 0 16 144
+Neighs:     2.5063e+06 ave   3.936e+06 max           0 min
+Histogram: 64 0 0 0 16 0 2 28 66 80
+FullNghs:  3.77303e+06 ave  5.9199e+06 max           0 min
+Histogram: 64 0 0 0 16 0 0 30 66 80
+
+Total # of neighbors = 9.6589567e+08
+Ave neighs/atom = 872.73631
+Ave special neighs/atom = 5.4560296
+Neighbor list builds = 269
+Dangerous builds = 0
+unfix 1
+Total wall time: 5:03:32

@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="msd50_ss"
+#SBATCH --output="msd50_ss.%j.out"
+#SBATCH --partition=compute
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u msd_plot_ss_z_u.py 50 4

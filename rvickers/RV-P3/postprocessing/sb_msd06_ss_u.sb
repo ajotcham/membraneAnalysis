@@ -1,0 +1,12 @@
+#!/bin/bash
+#SBATCH --job-name="msd06_plot"
+#SBATCH --output="msd06_plot.%j.out"
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=172G
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 12:00:00
+source ~/.bashrc
+python -u msd_plot_ss_z_u.py 06 4

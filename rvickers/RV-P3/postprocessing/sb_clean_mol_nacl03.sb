@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="cleanna03"
+#SBATCH --output="clean_nacl03.%j.out"
+#SBATCH --partition=RM
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+
+
+python -u clean_mol.py nacl03_90 perm

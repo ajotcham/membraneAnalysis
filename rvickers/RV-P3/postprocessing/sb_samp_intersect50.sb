@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name="ints50"
+#SBATCH --output="ints50.%j.out"
+#SBATCH --partition=shared
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=172G
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u intersect_sample1.py 50
+python -u intersect_sample2.py 50

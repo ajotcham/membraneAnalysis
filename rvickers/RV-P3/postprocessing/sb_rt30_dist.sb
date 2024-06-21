@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name="rt30"
+#SBATCH --output="rt30.%j.out"
+#SBATCH --partition=compute
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --account=nca125
+#SBATCH --export=ALL
+#SBATCH -t 48:00:00
+source ~/.bashrc
+python -u rt_msd_dist.py 30 35
