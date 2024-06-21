@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<VTKFile type="PRectilinearGrid" version="1.0" byte_order="LittleEndian" header_type="UInt64">
+<PRectilinearGrid WholeExtent="0 499 0 499 0 499" Ghostlevel="0">
+<PPointData Scalars="grid">
+<DataArray Name="grid" NumberOfComponents="1" type="UInt8"/>
+</PPointData>
+<PCoordinates>
+<DataArray Name="x_coordinates" NumberOfComponents="1" type="Float64"/>
+<DataArray Name="y_coordinates" NumberOfComponents="1" type="Float64"/>
+<DataArray Name="z_coordinates" NumberOfComponents="1" type="Float64"/>
+</PCoordinates>
+<Piece Extent="-1 250 -1 250 0 250" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.0.vtr"/>
+<Piece Extent="-1 250 -1 250 249 499" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.1.vtr"/>
+<Piece Extent="-1 250 249 500 0 250" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.2.vtr"/>
+<Piece Extent="-1 250 249 500 249 499" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.3.vtr"/>
+<Piece Extent="249 500 -1 250 0 250" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.4.vtr"/>
+<Piece Extent="249 500 -1 250 249 499" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.5.vtr"/>
+<Piece Extent="249 500 249 500 0 250" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.6.vtr"/>
+<Piece Extent="249 500 249 500 249 499" Source="test_lammps_read_grid_trim/test_lammps_read_grid_trimProc.7.vtr"/>
+</PRectilinearGrid>
+</VTKFile>
