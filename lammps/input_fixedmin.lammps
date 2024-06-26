@@ -23,7 +23,7 @@ pair_coeff 2 2 0.5 3.0
 thermo 10
 thermo_style custom step temp pe ke etotal press
 thermo_modify lost warn
-dump mydmp all atom 10 dump_min.lammpstrj
+dump mydmp all atom 10 output/dump_1min.lammpstrj ###Wildcard it if we want to separate timesteps
 
 #5) Run
 minimize 1.0e-4 1.0e-6 1000 10000
