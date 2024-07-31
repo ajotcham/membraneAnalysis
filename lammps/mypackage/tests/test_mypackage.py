@@ -19,8 +19,8 @@ top_atoms, top_indices = mypackage.top_velo(mag_velocity, 10)
 
 #create plot
 bounds = [-20,20,-20,20]
-# mypackage.plot_trajectory(atom_pos, bounds)
-# mypackage.plot_individual_location(top_indices, atom_pos)
+mypackage.plot_trajectory(atom_pos, bounds)
+mypackage.plot_individual_location(top_indices, atom_pos)
 
 discretization = [5,5,5]
 grid = np.zeros((discretization[0], discretization[1]))

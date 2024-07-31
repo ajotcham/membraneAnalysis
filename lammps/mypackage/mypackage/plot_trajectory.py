@@ -105,16 +105,3 @@ def find_grid_cell(atom_positions, boundaries, discretization, lengths):
     # row = min(max(row, 0), discretization[1] - 1)
 
     return grid_indices
-
-def test_grid_function():
-    """
-    tests for find_grid_cell function
-    """
-    atom_pos = np.array([1.5, 2.5, 3.5])
-    boundaries = np.array([[0, 5], [0, 5], [0, 5]])
-    discretization = np.array([5, 5, 5])
-    lengths = np.array([5, 5, 5])
-
-    # Call the function
-    result = find_grid_cell(atom_pos, boundaries, discretization, lengths)
-    return result
