@@ -1,0 +1,156 @@
+# Polymerization script for TMC carbon to MPD nitrogen 
+# Usage: Ensure call to LAMMPS is made from folder where data.lmps is saved, assume that reaction scripts are contained in ../../data_v1/scripts from folder where data.lmps is saved.
+
+# System
+units            real
+atom_style       full
+dimension        3
+newton           off
+boundary         p p p
+echo             none 
+
+# Styles
+pair_style       lj/charmm/coul/long 7.0 9.0
+pair_modify      shift no mix sixthpower
+kspace_style     pppm 1.0e-4
+kspace_modify    diff ad
+bond_style       harmonic
+angle_style      harmonic
+dihedral_style   charmm
+improper_style   harmonic
+special_bonds    charmm
+
+# Data file input
+read_data        data.lmps
+
+# Settings
+dielectric       1.0
+neighbor         2.0 bin
+neigh_modify     delay 0 every 1 check yes
+timestep         1.0
+run_style        verlet
+
+# Minimization Step
+min_style        sd
+minimize         1.0e-3 1.0e-3 100 100000
+min_style        cg
+min_modify       line quadratic
+minimize         1.0e-4 1.0e-4 100 100000
+
+velocity all create 300.0 4934329 dist gaussian
+
+molecule mol1 ../../data_v1/scripts/MPD_TMC_prerxn.mol
+molecule mol2 ../../data_v1/scripts/MPD_TMC_postrxn.mol
+
+variable BONDFREQ equal 1
+group NUM_AMIDE type 7
+variable MAX_BONDS equal count(NUM_AMIDE)
+variable TARGET_BONDS equal (${MAX_BONDS}*0.93)
+
+label SETRXN
+fix PArxn all bond/react stabilization yes statted_grp .03 &
+  react rxn1 all ${BONDFREQ} 0.0 5.0 mol1 mol2 ../../data_v1/scripts/MPDTMC_rxnmap.in
+
+thermo 1000000
+thermo_style custom step temp press density f_PArxn[1]
+
+variable PAbonds_made equal f_PArxn[1]
+
+
+
+
+label loop
+variable a loop 10
+print "==================================Current bonds formed = ${PAbonds_made} Minimum bonds desired = ${TARGET_BONDS}======================================="
+print "==================================NVT PA POLYMERIZATION RUN: 100,000 STEPS 300 C==============================="
+
+fix 1 statted_grp_REACT nvt temp 300 300 $(100.0*dt)
+fix 4 bond_react_MASTER_group temp/rescale ${BONDFREQ} 300 300 10 1
+run           10
+unfix 1
+unfix 4
+
+if "${PAbonds_made} >= ${TARGET_BONDS}" then "jump SELF break"
+variable b equal ${a}
+next a
+jump SELF loop
+
+
+label break
+print "==================================FORMING BONDS COMPLETE DONE: Total bonds formed = ${PAbonds_made}============"
+print "${PAbonds_made}" file PA_bonds.in
+variable  PAbonds_final equal ${PAbonds_made}
+unfix PArxn
+
+
+fix 1 all nvt temp 300 300 $(100.0*dt)
+variable final_steps equal 100-${b}*10
+print "==================================PA EQUILIBRATION RUN NUMBER OF STEPS = ${final_steps}================="
+thermo_style custom step temp press density
+run ${final_steps}
+unfix 1
+
+
+
+# Data file output
+reset_ids
+write_data       polym.lmps
+
+#Remove Hexane
+group HEXANE type 9 10
+delete_atoms group HEXANE
+reset_ids
+write_data       polym_clean.lmps
+
+variable NUM_OH equal (${MAX_BONDS}*0.17)
+
+region bawks block INF INF INF INF INF INF
+molecule OH ../../data_v1/molecules/hydroxide.mol
+create_atoms 0 random 1 43770 bawks mol OH 54383 
+minimize         1.0e-4 1.0e-4 1000 100000
+write_data term_data.lmps
+
+
+molecule mol3 ../../data_v1/scripts/TMC_OH_prerxn.mol
+molecule mol4 ../../data_v1/scripts/TMC_OH_postrxn.mol
+fix OHrxn all bond/react stabilization yes statted_grp .03 &
+  react rxn1 all ${BONDFREQ} 0.0 5.0 mol3 mol4 ../../data_v1/scripts/TMCOH_rxnmap.in
+
+variable OHBONDS_NEEDED equal ${MAX_BONDS}-${PAbonds_final}
+variable OHbonds_made equal f_OHrxn[1]
+thermo_style custom step temp press density f_OHrxn[1]
+
+label loop2
+variable c loop 10
+print "==================================Current bonds formed = ${OHbonds_made}======================================="
+print "==================================NVT OH POLYMERIZATION RUN: 100,000 STEPS 300 C==============================="
+
+fix 1 statted_grp_REACT nvt temp 300 300 $(100.0*dt)
+fix 4 bond_react_MASTER_group temp/rescale ${BONDFREQ} 300 300 10 1
+run           10
+unfix 1
+unfix 4
+
+if "${OHbonds_made} >= ${OHBONDS_NEEDED}" then "jump SELF break2"
+variable b equal ${c}
+next c
+jump SELF loop2
+
+
+label break2
+print "==================================FORMING BONDS COMPLETE DONE: Total bonds formed = ${OHbonds_made}============"
+unfix OHrxn
+
+
+fix 1 all nvt temp 300 300 $(100.0*dt)
+variable final_steps equal 100-${b}*10
+print "==================================PA EQUILIBRATION RUN NUMBER OF STEPS = ${final_steps}================="
+thermo_style custom step temp press density
+run ${final_steps}
+unfix 1
+
+
+
+# Data file output
+reset_ids
+write_data       term_final.lmps

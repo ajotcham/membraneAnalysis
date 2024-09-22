@@ -1,0 +1,1 @@
+cmake -C ../cmake/presets/most.cmake -D PKG_USER-REACTION=yes -D PKG_VORONOI=yes -D PKG_USER-OMP=yes -D BUILD_OMP=yes  -D PKG_USER-SMD=no ../cmake
