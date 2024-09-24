@@ -1,4 +1,3 @@
-"""glob provides file sorting"""
 import glob
 import numpy as np
 import natsort
@@ -6,7 +5,7 @@ import natsort
 files = natsort.natsorted(glob.glob('output/dump_md.*.lammpstrj'))
 """boundaries are in 3D x,y,z"""
 
-def process_atoms(file):
+def read_atoms(file):
     """
     Passes one file through and returns arrays xyz pos, xyz velo, atom# & type, #atoms in sim, and boundaries
     """
@@ -34,54 +33,45 @@ def process_atoms(file):
             for n,n_l in enumerate([0,1]):
                 boundaries[c-5, n_l] = float(line.split(" ")[n_l])
 
-    atom_pos = np.zeros((num_atoms, 3),dtype=np.float64)
-    atom_velo = np.zeros((num_atoms, 3),dtype=np.float64)
-    atom_map = np.zeros((num_atoms,2),dtype=np.int64)
+    atoms = {
+        "positions": np.zeros((num_atoms, 3), dtype=np.float64),
+        "velocities": np.zeros((num_atoms, 3), dtype=np.float64),
+        "map": np.zeros((num_atoms, 2), dtype=np.int64)
+    }
+    # atom_pos = np.zeros((num_atoms, 3),dtype=np.float64)
+    # atom_velo = np.zeros((num_atoms, 3),dtype=np.float64)
+    # atom_map = np.zeros((num_atoms,2),dtype=np.int64)
 
     for c, data in enumerate(data):
         for n,n_l in enumerate([0,1]):
-            atom_map[c,n_l] = int(data.split(" ")[n_l])
+            atoms["map"][c,n_l] = int(data.split(" ")[n_l])
 
         for n,n_l in enumerate([2,3,4]):
-            atom_pos[c,n] = float(data.split(" ")[n_l])
+            atoms["positions"][c,n] = float(data.split(" ")[n_l])
         
         for n,n_l in enumerate([5,6,7]):
-            atom_velo[c,n] = float(data.split(" ")[n_l])
+            atoms["velocities"][c,n] = float(data.split(" ")[n_l])
 
-    return atom_pos, atom_velo, atom_map, num_atoms, boundaries
+    return atoms, num_atoms, boundaries
 
 
-# def test_function(test_path):
-#     """
-#     test for process_atoms function
-#     """
-#     with open(test_path, 'r') as file:
-#         lines = [line.rstrip() for line in file]
-#         headers = lines[0:9]
-#         data = lines[9:]
+def poiseuille_subregion_atoms(atom_pos, atom_velo, atom_map, x_range, y_range, z_range):
+    """
+    Filters data to specific sub_region
+    x_range = tuple, (min_x, max_x) for desired subdomain
+    y_range = tuple, (min_y, max_y) for desired subdomain
+    z_range = tuple, (min_z, max_z) for desired subdomain
+    """
+    mask = (
+        (atom_pos[:, 0] >= x_range[0]) & (atom_pos[:, 0] <= x_range[1]) &
+        (atom_pos[:, 1] >= y_range[0]) & (atom_pos[:, 1] <= y_range[1]) &
+        (atom_pos[:, 2] >= z_range[0]) & (atom_pos[:, 2] <= z_range[1])
+    )
 
-#     for c, lines in enumerate(headers):
-#             if c == 2:
-#                 timestep = int(headers[1])
-#                 print(timestep)
+    sub_atoms = {
+        "positions": atom_pos[mask],
+        "velocities": atom_velo[mask],
+        "map": atom_map[mask]
+    }
 
-#             if c == 4:
-#                 atoms = int(headers[3])
-#                 print(atoms)
-
-#             if c == 6:
-#                 #Can be rewritten into for loop
-#                 continue
-
-#             else:
-#                 continue
-                
-#             test_info = np.zeros((atoms, 8))
-#             for c, data in enumerate(data):
-#                 for n,n_l in enumerate([0,1,2,3,4,5,6,7]):
-#                     test_info[c,n_l] = float(data.split(" ")[n_l])
-#     return test_info
-
-# process_atoms(files)
-# print(boundaries)
-
+    return sub_atoms

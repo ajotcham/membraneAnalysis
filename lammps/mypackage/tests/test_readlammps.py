@@ -1,24 +1,24 @@
-import sys
 import numpy as np
-# sys.path.append('/Users/ajotcham/Desktop/MembraneAnalysis/membraneAnalysis/lammps')
-from mypackage import readlammps
+import mypackage
 
-test_path = '../lammps/output/dump_pytest.lammpstrj'
+test_path = 'test_dumps/simple_dump.lammpstrj'
 
-def test_same():
-    expected_info = np.array([[1., 1., 1., 1., 1., 1., 1., 1.],
-                              [2., 2., 2., 2., 2., 2., 2., 2.]])
-    
-    test_info = readlammps.test_function(test_path)
-    np.testing.assert_array_equal(test_info, expected_info)
-    # expectedPos = np.array([[1., 1., 1., 1., 1.],
-    #                     [2., 2., 2., 2., 2.]])
-    
-    # expectedVelo = np.array([[1., 1., 1., 1., 1.],
-    #                      [2., 2., 2., 2., 2.]])
-    
-    # testP, testV = readlammps.test_function(test_path)
-    # np.testing.assert_array_equal(testP, expectedPos) 
-    # np.testing.assert_array_equal(testV, expectedVelo) 
-    
+def test_read_atoms():
+    """
+    Tests if read_atoms function is working properly
+    """
 
+    expected_pos = np.array([[1., 1., 1.],
+                            [2., 2., 2.]])
+    expected_velo = np.array([[1., 1., 1.],
+                            [2., 2., 2.]])
+    expected_atoms = int(2)
+
+    expected_bounds = np.array([[-20, 20], [-20, 20], [-20, 20]])
+    
+    test_pos, test_velo, test_map, test_atoms, test_bounds = mypackage.read_atoms(test_path)
+    
+    np.testing.assert_array_equal(test_pos, expected_pos)
+    np.testing.assert_array_equal(test_velo, expected_velo)
+    np.testing.assert_array_equal(test_bounds, expected_bounds)
+    assert test_atoms == expected_atoms

@@ -23,7 +23,7 @@ delete_atoms group group_type_2_out
 #4) Visualization #Simulation settings not needed because settings are being read in from .data file
 thermo 1000
 # thermo_modify lost warn
-dump mydmp all atom 1000 output/dump_md.*.lammpstrj
+dump mydmp all custom 1000 output/dump_periodic/dump_md.*.lammpstrj id type x y z vx vy vz
 variable number_type1_in equal count(group_type_1,region_cylinder_in)
 variable number_type2_in equal count(group_type_2,region_cylinder_in)
 
