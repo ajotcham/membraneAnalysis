@@ -18,7 +18,7 @@ improper_style   harmonic
 special_bonds    charmm
 
 # System definition
-read_data equil_polymer.lmps 
+read_data equil_polymer.lmps
 
 dielectric 1.0
 neighbor 4.0 bin
