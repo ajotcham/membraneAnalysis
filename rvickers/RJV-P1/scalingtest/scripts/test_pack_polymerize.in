@@ -22,8 +22,9 @@ improper_style   harmonic
 special_bonds    charmm
 
 # Data file input
+#Sets up domain size and number of atoms
 variable BOXSIZE equal 90*${mult}^(1/3)
-variable NUMMPD equal 300*${mult}
+variable NUMMPD equal 300*${mult} 
 variable NUMATOMS equal ${mult}*200*18+${mult}*300*16
 read_data        ../../molecules/TMC_converted.lmps extra/improper/per/atom 2
 #displace_atoms all move $(5*v_mult) $(5*v_mult) $(5*v_mult) units box 
@@ -62,7 +63,7 @@ minimize         1.0e-5 1.0e-5 10000 100000
 min_style        cg
 min_modify       line quadratic
 minimize         1.0e-8 1.0e-8 10000 100000
-write_data data.lmps
+write_data data80.lmps
 
 timestep 1.0
 
@@ -72,7 +73,7 @@ molecule mol2 MPD_TMC_postrxn.mol
 variable BONDFREQ equal 50
 group NUM_AMIDE type 7
 variable MAX_BONDS equal count(NUM_AMIDE)
-variable TARGET_BONDS equal (${MAX_BONDS}*0.93) #find 0.93 meaning
+variable TARGET_BONDS equal (${MAX_BONDS}*${xlink}) #target crosslinking degree
 
 label SETRXN
 fix PArxn all bond/react stabilization yes statted_grp .03 &
@@ -117,10 +118,10 @@ unfix PArxn
 
 velocity all scale 300.0
 fix 1 all nvt temp 300 300 $(100.0*dt)
-variable final_steps equal 750000-$(step) #aj changed from 750000
+variable final_steps equal 800000-$(step) #aj changed from 750000
 print "==================================PA EQUILIBRATION RUN NUMBER OF STEPS = ${final_steps}================="
 thermo_style custom step temp press density
-run 750000 upto #changed from 750000
+run 800000 upto #changed from 750000
 unfix 1
 
 
@@ -146,7 +147,7 @@ molecule OH ../../molecules/hydroxide.mol
 
 create_atoms 0 random ${NUM_OH} 43770 bawks mol OH 54383 
 minimize         1.0e-4 1.0e-4 1000 100000
-write_data logs/term_data.lmps
+write_data logs/term_data_80.lmps
 
 
 molecule mol3 TMC_OH_prerxn.mol
